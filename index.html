@@ -24,6 +24,8 @@
       font-family: 'Inter', -apple-system, sans-serif;
       -webkit-font-smoothing: antialiased;
       color: var(--color-text);
+      overflow-x: hidden;
+      -webkit-text-size-adjust: 100%;
     }
 
     /* ══════════════════════════════════════
@@ -32,6 +34,7 @@
     #hero {
       position: relative;
       min-height: 100vh;
+      min-height: 100dvh;
       width: 100%;
       overflow: hidden;
       background-color: #0E2240;
@@ -49,6 +52,7 @@
       max-width: 1280px;
       margin: 0 auto;
       min-height: 100vh;
+      min-height: 100dvh;
       justify-content: center;
     }
 
@@ -1001,6 +1005,20 @@
     @media (max-width: 440px) {
       #how-it-works .steps {
         grid-template-columns: 1fr;
+        gap: 14px;
+      }
+      #how-it-works .step {
+        flex-direction: row;
+        align-items: center;
+        gap: 16px;
+      }
+      #how-it-works .step__num {
+        width: 36px;
+        height: 36px;
+        flex-shrink: 0;
+      }
+      #how-it-works .step__title {
+        font-size: 1rem;
       }
     }
 
@@ -1079,6 +1097,13 @@
     @media (max-width: 760px) {
       #course-details .stats-strip {
         grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @media (max-width: 480px) {
+      #course-details .stats-strip {
+        grid-template-columns: 1fr;
+        padding: 28px 28px;
+        gap: 22px;
       }
     }
 
@@ -1854,7 +1879,7 @@
       left: 50%;
       transform: translateX(-50%);
       background: #EC5F7E;
-      color: #0E2240;
+      color: #FFFFFF;
       padding: 6px 14px;
       border-radius: 0 0 12px 12px;
       font-family: 'Inter', sans-serif;
@@ -1906,17 +1931,18 @@
       padding: 14px 24px;
       border-radius: 999px;
       background: #EC5F7E;
-      color: #0E2240;
+      color: #FFFFFF;
       text-decoration: none;
       font-family: 'Inter', sans-serif;
       font-size: 0.9375rem;
       font-weight: 800;
       letter-spacing: 0.01em;
-      transition: transform 0.15s ease, background 0.15s ease;
+      transition: transform 0.15s ease, background 0.15s ease, color 0.15s ease;
       margin-top: 4px;
     }
     #pricing .compare .plan-header .cta:hover {
       background: #FFCB30;
+      color: #0E2240;
       transform: translateY(-1px);
     }
     #pricing .compare .plan-header .trial-note {
@@ -1966,7 +1992,7 @@
     #pricing .compare .check svg {
       width: 13px;
       height: 13px;
-      stroke: #0E2240;
+      stroke: #FFFFFF;
       stroke-width: 3.5;
       fill: none;
       stroke-linecap: round;
@@ -2009,27 +2035,84 @@
     }
 
     @media (max-width: 760px) {
+      /* Two stacked plan cards: each card = header + feature list, no gaps between rows */
       #pricing .compare {
-        grid-template-columns: 1fr;
+        display: flex;
+        flex-direction: column;
+        background: transparent;
+        border: none;
+        box-shadow: none;
+        border-radius: 0;
+        overflow: visible;
+        gap: 0;
       }
-      #pricing .compare .col-empty { display: none; }
-      #pricing .compare .feature-label {
-        background: rgba(30, 15, 34, 0.04);
-        font-size: 0.8125rem;
-        text-transform: uppercase;
-        letter-spacing: 0.04em;
-        padding: 12px 24px;
+      #pricing .compare .col-empty,
+      #pricing .compare .feature-label { display: none; }
+
+      /* Compact plan headers */
+      #pricing .compare .plan-header {
+        padding: 28px 22px 22px;
+        background: #FFFFFF;
+        border-radius: 20px 20px 0 0;
+        border-bottom: 1px solid rgba(30, 15, 34, 0.08);
+        row-gap: 10px;
       }
+      #pricing .compare .plan-header h3 {
+        font-size: 1.375rem;
+        margin-top: 4px;
+      }
+      #pricing .compare .plan-header .amount { font-size: 2rem; }
+      #pricing .compare .plan-header .price { margin: 0; }
+      #pricing .compare .plan-header .cta { padding: 12px 22px; margin-top: 2px; }
+      #pricing .compare .plan-header.is-featured {
+        border-radius: 20px 20px 0 0;
+        margin-top: 28px;
+        background: #FFFFFF;
+      }
+      #pricing .compare .feature-cell.is-featured {
+        background: #FFFFFF;
+      }
+
+      /* Feature cells become labelled rows under their plan, sharing the white card */
       #pricing .compare .feature-cell {
-        justify-content: flex-start;
-        padding-left: 24px;
+        justify-content: space-between;
+        padding: 14px 22px;
+        background: #FFFFFF;
+        border-bottom: 1px solid rgba(30, 15, 34, 0.06);
       }
       #pricing .compare .feature-cell::before {
-        content: attr(data-plan);
-        font-weight: 700;
-        margin-right: 12px;
-        opacity: 0.7;
+        content: attr(data-feature);
+        font-family: 'Inter', sans-serif;
+        font-weight: 600;
+        color: #0E2240;
+        font-size: 0.9375rem;
+        margin-right: 16px;
+        flex: 1;
+        text-align: left;
+        opacity: 0.85;
       }
+      #pricing .compare .feature-cell.is-featured {
+        border-left: 2px solid #0E2240;
+        border-right: 2px solid #0E2240;
+      }
+
+      /* Round bottom of last cell in each plan group + drop its bottom border */
+      #pricing .compare > .feature-cell:not(.is-featured):nth-last-child(2) {
+        border-radius: 0 0 20px 20px;
+        border-bottom: none;
+        box-shadow: 0 18px 40px -12px rgba(30, 15, 34, 0.10);
+      }
+      #pricing .compare > .feature-cell.is-featured:last-child {
+        border-bottom: 2px solid #0E2240;
+        border-radius: 0 0 20px 20px;
+        box-shadow: 0 18px 40px -12px rgba(30, 15, 34, 0.10);
+      }
+
+      /* Reorder: Monthly group, then Yearly group */
+      #pricing .compare .plan-header:not(.is-featured) { order: 1; }
+      #pricing .compare .feature-cell:not(.is-featured) { order: 2; }
+      #pricing .compare .plan-header.is-featured { order: 3; }
+      #pricing .compare .feature-cell.is-featured { order: 4; }
     }
 
     /* ══════════════════════════════════════
@@ -2322,17 +2405,7 @@
 
     </div>
 
-    <button type="button" class="more-link" onclick="openInsideModal()">See what&rsquo;s inside <span aria-hidden="true">&rarr;</span></button>
-
   </section>
-
-  <!-- Empty placeholder modal — content TBD -->
-  <div class="inside-modal" id="insideModal" hidden>
-    <div class="inside-modal__backdrop" onclick="closeInsideModal()"></div>
-    <div class="inside-modal__panel" role="dialog" aria-modal="true" aria-label="What's inside the course">
-      <button type="button" class="inside-modal__close" onclick="closeInsideModal()" aria-label="Close">&times;</button>
-    </div>
-  </div>
 
   <section id="how-it-works">
     <div class="wrap">
@@ -2654,40 +2727,40 @@
         </div>
 
         <div class="feature-label">Free trial</div>
-        <div class="feature-cell" data-plan="Monthly"><span class="cell-text">3 days</span></div>
-        <div class="feature-cell is-featured" data-plan="Yearly"><span class="cell-text">14 days</span></div>
+        <div class="feature-cell" data-plan="Monthly" data-feature="Free trial"><span class="cell-text">3 days</span></div>
+        <div class="feature-cell is-featured" data-plan="Yearly" data-feature="Free trial"><span class="cell-text">14 days</span></div>
 
         <div class="feature-label">For one educator</div>
-        <div class="feature-cell" data-plan="Monthly"><span class="check"><svg viewBox="0 0 24 24"><polyline points="5 12 10 17 19 7"/></svg></span></div>
-        <div class="feature-cell is-featured" data-plan="Yearly"><span class="check"><svg viewBox="0 0 24 24"><polyline points="5 12 10 17 19 7"/></svg></span></div>
+        <div class="feature-cell" data-plan="Monthly" data-feature="For one educator"><span class="check"><svg viewBox="0 0 24 24"><polyline points="5 12 10 17 19 7"/></svg></span></div>
+        <div class="feature-cell is-featured" data-plan="Yearly" data-feature="For one educator"><span class="check"><svg viewBox="0 0 24 24"><polyline points="5 12 10 17 19 7"/></svg></span></div>
 
         <div class="feature-label">Cancel anytime</div>
-        <div class="feature-cell" data-plan="Monthly"><span class="check"><svg viewBox="0 0 24 24"><polyline points="5 12 10 17 19 7"/></svg></span></div>
-        <div class="feature-cell is-featured" data-plan="Yearly"><span class="check"><svg viewBox="0 0 24 24"><polyline points="5 12 10 17 19 7"/></svg></span></div>
+        <div class="feature-cell" data-plan="Monthly" data-feature="Cancel anytime"><span class="check"><svg viewBox="0 0 24 24"><polyline points="5 12 10 17 19 7"/></svg></span></div>
+        <div class="feature-cell is-featured" data-plan="Yearly" data-feature="Cancel anytime"><span class="check"><svg viewBox="0 0 24 24"><polyline points="5 12 10 17 19 7"/></svg></span></div>
 
         <div class="feature-label">Full course (16 lessons, ~3 hours)</div>
-        <div class="feature-cell" data-plan="Monthly"><span class="check"><svg viewBox="0 0 24 24"><polyline points="5 12 10 17 19 7"/></svg></span></div>
-        <div class="feature-cell is-featured" data-plan="Yearly"><span class="check"><svg viewBox="0 0 24 24"><polyline points="5 12 10 17 19 7"/></svg></span></div>
+        <div class="feature-cell" data-plan="Monthly" data-feature="Full course (16 lessons, ~3 hours)"><span class="check"><svg viewBox="0 0 24 24"><polyline points="5 12 10 17 19 7"/></svg></span></div>
+        <div class="feature-cell is-featured" data-plan="Yearly" data-feature="Full course (16 lessons, ~3 hours)"><span class="check"><svg viewBox="0 0 24 24"><polyline points="5 12 10 17 19 7"/></svg></span></div>
 
         <div class="feature-label">Guided Story Builder</div>
-        <div class="feature-cell" data-plan="Monthly"><span class="check"><svg viewBox="0 0 24 24"><polyline points="5 12 10 17 19 7"/></svg></span></div>
-        <div class="feature-cell is-featured" data-plan="Yearly"><span class="check"><svg viewBox="0 0 24 24"><polyline points="5 12 10 17 19 7"/></svg></span></div>
+        <div class="feature-cell" data-plan="Monthly" data-feature="Guided Story Builder"><span class="check"><svg viewBox="0 0 24 24"><polyline points="5 12 10 17 19 7"/></svg></span></div>
+        <div class="feature-cell is-featured" data-plan="Yearly" data-feature="Guided Story Builder"><span class="check"><svg viewBox="0 0 24 24"><polyline points="5 12 10 17 19 7"/></svg></span></div>
 
         <div class="feature-label">Free updates</div>
-        <div class="feature-cell" data-plan="Monthly"><span class="check"><svg viewBox="0 0 24 24"><polyline points="5 12 10 17 19 7"/></svg></span></div>
-        <div class="feature-cell is-featured" data-plan="Yearly"><span class="check"><svg viewBox="0 0 24 24"><polyline points="5 12 10 17 19 7"/></svg></span></div>
+        <div class="feature-cell" data-plan="Monthly" data-feature="Free updates"><span class="check"><svg viewBox="0 0 24 24"><polyline points="5 12 10 17 19 7"/></svg></span></div>
+        <div class="feature-cell is-featured" data-plan="Yearly" data-feature="Free updates"><span class="check"><svg viewBox="0 0 24 24"><polyline points="5 12 10 17 19 7"/></svg></span></div>
 
         <div class="feature-label">Student Profiler &amp; Dashboard</div>
-        <div class="feature-cell" data-plan="Monthly"><span class="dash">&mdash;</span></div>
-        <div class="feature-cell is-featured" data-plan="Yearly"><span class="check"><svg viewBox="0 0 24 24"><polyline points="5 12 10 17 19 7"/></svg></span></div>
+        <div class="feature-cell" data-plan="Monthly" data-feature="Student Profiler &amp; Dashboard"><span class="dash">&mdash;</span></div>
+        <div class="feature-cell is-featured" data-plan="Yearly" data-feature="Student Profiler &amp; Dashboard"><span class="check"><svg viewBox="0 0 24 24"><polyline points="5 12 10 17 19 7"/></svg></span></div>
 
         <div class="feature-label">One PD claim, not twelve</div>
-        <div class="feature-cell" data-plan="Monthly"><span class="dash">&mdash;</span></div>
-        <div class="feature-cell is-featured" data-plan="Yearly"><span class="check"><svg viewBox="0 0 24 24"><polyline points="5 12 10 17 19 7"/></svg></span></div>
+        <div class="feature-cell" data-plan="Monthly" data-feature="One PD claim, not twelve"><span class="dash">&mdash;</span></div>
+        <div class="feature-cell is-featured" data-plan="Yearly" data-feature="One PD claim, not twelve"><span class="check"><svg viewBox="0 0 24 24"><polyline points="5 12 10 17 19 7"/></svg></span></div>
 
         <div class="feature-label">Tax invoice emailed on signup</div>
-        <div class="feature-cell" data-plan="Monthly"><span class="dash">&mdash;</span></div>
-        <div class="feature-cell is-featured" data-plan="Yearly"><span class="check"><svg viewBox="0 0 24 24"><polyline points="5 12 10 17 19 7"/></svg></span></div>
+        <div class="feature-cell" data-plan="Monthly" data-feature="Tax invoice emailed on signup"><span class="dash">&mdash;</span></div>
+        <div class="feature-cell is-featured" data-plan="Yearly" data-feature="Tax invoice emailed on signup"><span class="check"><svg viewBox="0 0 24 24"><polyline points="5 12 10 17 19 7"/></svg></span></div>
 
       </div>
       <p class="schools-link">Training your whole team? <a href="#">Get a quote for your school</a></p>
